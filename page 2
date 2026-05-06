@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratório de Forças: Gravidade e Dinâmica</title>
+    <style>
+        :root { --primary: #6366f1; --bg: #0f172a; --card: #1e293b; --text: #f1f5f9; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; line-height: 1.6; }
+        .container { max-width: 1000px; margin: auto; }
+        header { text-align: center; padding: 40px 0; }
+       
+        /* Grid de Informações */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 40px; }
+        .card { background: var(--card); padding: 20px; border-radius: 12px; border: 1px solid #334155; }
+        .formula { color: #818cf8; font-family: monospace; font-size: 1.2em; display: block; margin: 10px 0; }
+
+        /* Simuladores */
+        .sim-section { background: #1e293b; padding: 30px; border-radius: 20px; margin-top: 30px; border: 2px solid #334155; }
+        .controls { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; align-items: center; margin-bottom: 30px; }
+       
+        /* Estilo do Planeta/Objeto */
+        #planet-display { width: 120px; height: 120px; border-radius: 50%; margin: 20px auto; background: radial-gradient(circle, #fbbf24, #d97706); box-shadow: 0 0 20px rgba(251, 191, 36, 0.4); transition: 0.5s; }
+        .weight-result { font-size: 2em; font-weight: bold; color: #4ade80; }
+       
+        select, input { padding: 10px; border-radius: 8px; border: none; background: #334155; color: white; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Laboratório Digital de Forças</h1>
+            <p>Explore a gravidade em outros mundos e as leis de Newton.</p>
+        </header>
+
+        <div class="grid">
+            <div class="card">
+                <h3>🪐 Lei da Gravitação</h3>
+                <p>A força peso depende da massa do corpo e da aceleração da gravidade do planeta.</p>
+                <span class="formula">P = m · g</span>
+            </div>
+            <div class="card">
+                <h3>🚀 Força Resultante</h3>
+                <p>A aceleração de um objeto é proporcional à força líquida atuando sobre ele.</p>
+                <span class="formula">F = m · a</span>
+            </div>
+        </div>
+
+        <!-- NOVO SIMULADOR DE GRAVIDADE -->
+        <section class="sim-section">
+            <h2 style="text-align: center;">Simulador de Peso Interplanetário</h2>
+            <div class="controls">
+                <div>
+                    <label>Sua Massa (kg): </label>
+                    <input type="number" id="mass-input" value="70" min="1">
+                </div>
+                <div>
+                    <label>Escolha o Planeta: </label>
+                    <select id="planet-selector">
+                        <option value="9.8" data-color="radial-gradient(circle, #3b82f6, #1d4ed8)">Terra (9.8 m/s²)</option>
+                        <option value="1.6" data-color="radial-gradient(circle, #94a3b8, #475569)">Lua (1.6 m/s²)</option>
+                        <option value="3.7" data-color="radial-gradient(circle, #ef4444, #991b1b)">Marte (3.7 m/s²)</option>
+                        <option value="24.8" data-color="radial-gradient(circle, #fbbf24, #92400e)">Júpiter (24.8 m/s²)</option>
+                        <option value="8.8" data-color="radial-gradient(circle, #fcd34d, #b45309)">Vênus (8.8 m/s²)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div style="text-align: center;">
+                <div id="planet-display"></div>
+                <p>Seu peso neste mundo seria:</p>
+                <div class="weight-result"><span id="final-weight">686</span> N</div>
+                <p><small>*Newton (N) é a unidade de força, não quilogramas!</small></p>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const massInput = document.getElementById('mass-input');
+        const planetSelector = document.getElementById('planet-selector');
+        const weightDisplay = document.getElementById('final-weight');
+        const planetVisual = document.getElementById('planet-display');
+
+        function updatePhysics() {
+            const mass = parseFloat(massInput.value) || 0;
+            const gravity = parseFloat(planetSelector.value);
+            const selectedOption = planetSelector.options[planetSelector.selectedIndex];
+           
+            // Cálculo do Peso
+            const weight = (mass * gravity).toFixed(1);
+            weightDisplay.innerText = weight;
+
+            // Atualiza visual do planeta
+            planetVisual.style.background = selectedOption.getAttribute('data-color');
+           
+            // Efeito visual de escala (Júpiter parece "mais pesado")
+            const scale = 0.8 + (gravity / 30);
+            planetVisual.style.transform = `scale(${scale})`;
+        }
+
+        massInput.addEventListener('input', updatePhysics);
+        planetSelector.addEventListener('change', updatePhysics);
+       
+        // Iniciar com visual da Terra
+        updatePhysics();
+    </script>
+</body>
+</html>
